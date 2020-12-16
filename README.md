@@ -22,4 +22,4 @@ For help getting started with Flutter, view our online documentation, which offe
 
 ## Example
 
-[See Here](./example/example/lib)
+[See Here](./example/lib/main.dart)
