@@ -4,17 +4,22 @@ A flutter package for both IOS and Android to create swipe feature of popular da
 
 ## Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+* Add the package to your project using : ```hop_swipe_cards:``` and add the import ```import 'package:hop_swipe_cards/hop_swipe_cards.dart'```
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+* Add you swipe cards and widget to open for details
 
+* To know the after swipe status, use the callback
+
+* Add Widget when no cards are present in the parameter ```noSwipeCardsLeft```
+
+* Use the disposable ```CardController``` to control triggers on cards using buttons
+
+For help getting started with Flutter, view our online documentation, which offers tutorials, samples, guidance on mobile development, and a full API reference.
 
 ## Screenshots
 
 <img src="/images/hop_card.gif" width="250" height="450"/>
 
+## Example
+
+[See Here](./example/example/lib)
