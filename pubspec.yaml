@@ -1,6 +1,7 @@
 name: hop_swipe_cards
 description: A flutter package for Hop swipe cards.
 version: 0.0.1
+author: HumaFarheen <hum11farheen@gmail.com>
 homepage: https://github.com/hop_swipe_cards
 
 environment:
