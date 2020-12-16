@@ -15,5 +15,6 @@ samples, guidance on mobile development, and a full API reference.
 
 
 ## Screenshots
-<img src="![screenshot](./images/hop_card.gif)" width="250" height="250"/>
-![screenshot](./images/hop_card.gif)
+
+<img src="/images/hop_card.gif" width="250" height="250"/>
+
