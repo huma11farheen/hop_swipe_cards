@@ -115,6 +115,14 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   }
 
   @override
+  void didUpdateWidget(covariant HopSwipeCards oldWidget) {
+    if (oldWidget._totalCards != widget._totalCards) {
+      _initializeCurrentFront();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void initState() {
     super.initState();
     _initState();
