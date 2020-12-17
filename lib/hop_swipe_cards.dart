@@ -5,7 +5,25 @@ import 'dart:math';
 import 'package:disposable_provider/disposable_provider.dart';
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+enum TriggerDirection {
+  none,
+  rightOnCard,
+  leftOnCard,
+  rightOnProfile,
+  leftOnProfile,
+}
+
+enum InProgressSwipingDirection {
+  left,
+  right,
+  center,
+}
+
+enum CardSwipeOrientation {
+  left,
+  right,
+  recover,
+}
 
 /// Used to show current swiping direction of card
 ///Usually used for swapping color of cards based on direction of swipe
