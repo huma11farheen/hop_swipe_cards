@@ -22,4 +22,4 @@ For help getting started with Flutter, view our online documentation, which offe
 
 ## Example
 
-[See Here](./example/lib/main.dart)
+[See Here](https://github.com/huma11farheen/hop_swipe_cards/blob/main/example/lib/main.dart)
