@@ -5,3 +5,5 @@
 ## [0.0.2] - Update widget during async events.
 
 ## [0.0.3] - Fix error log.
+
+## [0.0.4]
