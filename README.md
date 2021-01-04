@@ -18,7 +18,7 @@ For help getting started with Flutter, view our online documentation, which offe
 
 ## Screenshots
 
-<img src="/images/hop_card.gif" width="250" height="450"/>
+![hop_card (1)](https://user-images.githubusercontent.com/56956749/103538808-460c9980-4eda-11eb-8c87-c28919cfd5ed.gif)
 
 ## Example
 
