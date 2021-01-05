@@ -9,3 +9,5 @@
 ## [0.0.4]
 
 ## [0.0.5] - Update README
+
+## [0.0.5+1] - fix argument name, because of the opposite mean
