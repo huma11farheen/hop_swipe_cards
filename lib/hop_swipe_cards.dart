@@ -65,8 +65,8 @@ class HopSwipeCards extends StatefulWidget {
 
   final List<Alignment> _cardAligns = [];
 
-  //At any point if swiping has to be disabled
-  final bool _disableSwiping;
+  //If you have points left, you can swipe the card
+  final bool _canSwipe;
 
   final VoidCallback cantSwipeLikeWhenNoPointsCallback;
 
@@ -96,7 +96,7 @@ class HopSwipeCards extends StatefulWidget {
         _totalCards = totalNum,
         _stackNumber = stackNum,
         _animationDuration = animationDuration,
-        _disableSwiping = isPointsLeft,
+        _canSwipe = isPointsLeft,
         _swipeEdge = swipeEdge {
     final widthGap = maxWidth - minWidth;
     final heightGap = maxHeight - minHeight;
@@ -123,8 +123,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
 
   static bool triedSwipingLikeWhenNoPoints = false;
 
-  bool get isPointsLeft =>
-      widget._disableSwiping == null || widget._disableSwiping;
+  bool get isPointsLeft => widget._canSwipe == null || widget._canSwipe;
 
   @override
   void dispose() {
