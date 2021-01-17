@@ -11,6 +11,8 @@ enum TriggerDirection {
   leftOnCard,
   rightOnProfile,
   leftOnProfile,
+  top,
+  bottom
 }
 
 enum InProgressSwipingDirection {
@@ -396,6 +398,15 @@ class CardAnimation {
         endY = 0.0;
         _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = true;
       }
+    } else if (_HopSwipeCardsState._trigger == TriggerDirection.top ||
+        _HopSwipeCardsState._trigger == TriggerDirection.bottom) {
+      if (_HopSwipeCardsState._trigger == TriggerDirection.top) {
+        endX = currentAlignment.x;
+        endY = currentAlignment.y - swipeEdge;
+      } else {
+        endX = currentAlignment.x;
+        endY = currentAlignment.y + swipeEdge;
+      }
     } else if (_HopSwipeCardsState._trigger == TriggerDirection.leftOnCard ||
         _HopSwipeCardsState._trigger == TriggerDirection.leftOnProfile) {
       endX = currentAlignment.x - swipeEdge;
@@ -529,6 +540,14 @@ class CardController extends Disposable {
 
   void triggerRightOnProfile() {
     _listener?.call(TriggerDirection.rightOnProfile);
+  }
+
+  void triggerTop() {
+    _listener?.call(TriggerDirection.top);
+  }
+
+  void triggerDown() {
+    _listener?.call(TriggerDirection.bottom);
   }
 
   // ignore: use_setters_to_change_properties
