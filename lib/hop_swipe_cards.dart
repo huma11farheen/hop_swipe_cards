@@ -12,7 +12,8 @@ enum TriggerDirection {
   rightOnProfile,
   leftOnProfile,
   top,
-  bottom
+  bottom,
+  rewind
 }
 
 enum InProgressSwipingDirection {
@@ -116,6 +117,7 @@ class HopSwipeCards extends StatefulWidget {
 class _HopSwipeCardsState extends State<HopSwipeCards>
     with TickerProviderStateMixin {
   Alignment frontCardAlign = Alignment.center;
+  Alignment afterSwipeAlignment = Alignment.center;
 
   AnimationController _animationController;
 
@@ -126,6 +128,8 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   static bool triedSwipingLikeWhenNoPoints = false;
 
   bool get isPointsLeft => widget._canSwipe == null || widget._canSwipe;
+
+  int swipedCards = 0;
 
   @override
   void dispose() {
@@ -172,6 +176,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
               direction = TriggerDirection.none;
               _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = false;
             }
+
             CardSwipeOrientation orientation;
             if (frontCardAlign.x < -widget._swipeEdge) {
               orientation = CardSwipeOrientation.left;
@@ -185,6 +190,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
               frontCardAlign = widget._cardAligns[widget._stackNumber - 1];
               orientation = CardSwipeOrientation.recover;
             }
+
             if (direction == TriggerDirection.none) {
               direction = orientation == CardSwipeOrientation.left
                   ? TriggerDirection.leftOnCard
@@ -193,9 +199,17 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
                 direction = TriggerDirection.none;
               }
             }
-
-            if (widget.swipeCompleteCallback != null) {
+            if (_HopSwipeCardsState._trigger == TriggerDirection.rewind) {
+              swipedCards--;
+            }
+            if (orientation != CardSwipeOrientation.recover) {
+              swipedCards++;
+              afterSwipeAlignment = frontCardAlign;
+            }
+            if (widget.swipeCompleteCallback != null &&
+                _HopSwipeCardsState._trigger != TriggerDirection.rewind) {
               widget.swipeCompleteCallback(index, direction);
+
               if (orientation != CardSwipeOrientation.recover) {
                 changeCardOrder();
               }
@@ -240,6 +254,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
         ),
       ),
     );
+
     return cards;
   }
 
@@ -253,14 +268,16 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
       return Align(
         alignment: _animationController.status == AnimationStatus.forward
             ? frontCardAlign = CardAnimation.frontCardAlign(
-                    currentXLocation: frontCardAlign.x,
-                    controller: _animationController,
-                    currentAlignment: frontCardAlign,
-                    baseAlign: widget._cardAligns[widget._stackNumber - 1],
-                    swipeEdge: widget._swipeEdge,
-                    pointLeft: isPointsLeft,
-                    allowSwipeUpAndDown: widget._allowSwipeUpAndDown)
-                .value
+                swipedCards: swipedCards,
+                currentXLocation: frontCardAlign.x,
+                afterSwipeAlignment: afterSwipeAlignment,
+                controller: _animationController,
+                currentAlignment: frontCardAlign,
+                baseAlign: widget._cardAligns[widget._stackNumber - 1],
+                swipeEdge: widget._swipeEdge,
+                pointLeft: isPointsLeft,
+                allowSwipeUpAndDown: widget._allowSwipeUpAndDown,
+              ).value
             : frontCardAlign,
         child: Transform.rotate(
           angle: (pi / 80.0) *
@@ -282,7 +299,6 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
         ),
       );
     }
-
     return Align(
       alignment: _animationController.status == AnimationStatus.forward &&
               (frontCardAlign.x > 3.0 ||
@@ -318,12 +334,20 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   }
 
   void animateCards(TriggerDirection trigger) {
+    print(swipedCards);
+    print(trigger == TriggerDirection.rewind && swipedCards == 0);
     if (_animationController.isAnimating ||
-        _currentFront + widget._stackNumber == 0) {
+        _currentFront + widget._stackNumber == 0 ||
+        (trigger == TriggerDirection.rewind && swipedCards == 0)) {
       return;
     }
 
     _trigger = trigger;
+    if (trigger == TriggerDirection.rewind) {
+      setState(() {
+        _currentFront++;
+      });
+    }
     _animationController
       ..stop()
       ..value = 0.0
@@ -366,7 +390,9 @@ class CardAnimation {
       Alignment baseAlign,
       double swipeEdge,
       bool pointLeft,
-      bool allowSwipeUpAndDown}) {
+      bool allowSwipeUpAndDown,
+      int swipedCards,
+      Alignment afterSwipeAlignment}) {
     double endX, endY;
 
     if (_HopSwipeCardsState._trigger == TriggerDirection.none) {
@@ -407,6 +433,11 @@ class CardAnimation {
         endX = currentAlignment.x;
         endY = currentAlignment.y + swipeEdge;
       }
+    } else if (_HopSwipeCardsState._trigger == TriggerDirection.rewind &&
+        swipedCards > 0) {
+      endY = 0;
+      endX = 0;
+      currentAlignment = afterSwipeAlignment;
     } else if (_HopSwipeCardsState._trigger == TriggerDirection.leftOnCard ||
         _HopSwipeCardsState._trigger == TriggerDirection.leftOnProfile) {
       endX = currentAlignment.x - swipeEdge;
@@ -429,13 +460,14 @@ class CardAnimation {
         Alignment(endX, endY),
       );
     }
+
     return AlignmentTween(
       begin: currentAlignment,
       end: Alignment(endX, endY),
     ).animate(
       CurvedAnimation(
         parent: controller,
-        curve: Curves.easeOut,
+        curve: Curves.linear,
       ),
     );
   }
@@ -489,12 +521,21 @@ class CardAnimation {
     Size beginSize,
     Size endSize,
   ) {
-    return SizeTween(begin: beginSize, end: endSize).animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: Curves.easeOut,
-      ),
-    );
+    if (_HopSwipeCardsState._trigger == TriggerDirection.rewind) {
+      return SizeTween(begin: endSize, end: beginSize).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeIn,
+        ),
+      );
+    } else {
+      return SizeTween(begin: beginSize, end: endSize).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeOut,
+        ),
+      );
+    }
   }
 
   static Animation<Alignment> backCardAlign(
@@ -502,12 +543,20 @@ class CardAnimation {
     Alignment beginAlign,
     Alignment endAlign,
   ) {
-    return AlignmentTween(begin: beginAlign, end: endAlign).animate(
-      CurvedAnimation(
+    if (_HopSwipeCardsState._trigger == TriggerDirection.rewind) {
+      return AlignmentTween(begin: endAlign, end: beginAlign)
+          .animate(CurvedAnimation(
         parent: controller,
-        curve: Curves.easeOut,
-      ),
-    );
+        curve: Curves.easeIn,
+      ));
+    } else {
+      return AlignmentTween(begin: beginAlign, end: endAlign).animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeOut,
+        ),
+      );
+    }
   }
 }
 
@@ -553,6 +602,10 @@ class CardController extends Disposable {
   // ignore: use_setters_to_change_properties
   void addListener(final TriggerListener listener) {
     _listener = listener;
+  }
+
+  void triggerRewind() {
+    _listener?.call(TriggerDirection.rewind);
   }
 
   @override

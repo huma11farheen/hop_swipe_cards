@@ -70,6 +70,12 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                       context.read<CardController>().triggerRightOnCard();
                     },
                   ),
+                  CustomButton(
+                    icon: Icons.favorite_border,
+                    onTap: () {
+                      context.read<CardController>().triggerRewind();
+                    },
+                  ),
                 ],
               ),
             ),
