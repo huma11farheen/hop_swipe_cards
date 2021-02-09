@@ -13,7 +13,7 @@ enum TriggerDirection {
   leftOnProfile,
   top,
   bottom,
-  rewind
+  rewind,
 }
 
 enum InProgressSwipingDirection {
@@ -334,8 +334,6 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   }
 
   void animateCards(TriggerDirection trigger) {
-    print(swipedCards);
-    print(trigger == TriggerDirection.rewind && swipedCards == 0);
     if (_animationController.isAnimating ||
         _currentFront + widget._stackNumber == 0 ||
         (trigger == TriggerDirection.rewind && swipedCards == 0)) {
@@ -521,21 +519,12 @@ class CardAnimation {
     Size beginSize,
     Size endSize,
   ) {
-    if (_HopSwipeCardsState._trigger == TriggerDirection.rewind) {
-      return SizeTween(begin: endSize, end: beginSize).animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Curves.easeIn,
-        ),
-      );
-    } else {
-      return SizeTween(begin: beginSize, end: endSize).animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Curves.easeOut,
-        ),
-      );
-    }
+    return SizeTween(begin: beginSize, end: endSize).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeOut,
+      ),
+    );
   }
 
   static Animation<Alignment> backCardAlign(
@@ -543,20 +532,12 @@ class CardAnimation {
     Alignment beginAlign,
     Alignment endAlign,
   ) {
-    if (_HopSwipeCardsState._trigger == TriggerDirection.rewind) {
-      return AlignmentTween(begin: endAlign, end: beginAlign)
-          .animate(CurvedAnimation(
+    return AlignmentTween(begin: beginAlign, end: endAlign).animate(
+      CurvedAnimation(
         parent: controller,
-        curve: Curves.easeIn,
-      ));
-    } else {
-      return AlignmentTween(begin: beginAlign, end: endAlign).animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Curves.easeOut,
-        ),
-      );
-    }
+        curve: Curves.easeOut,
+      ),
+    );
   }
 }
 

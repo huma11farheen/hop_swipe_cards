@@ -56,6 +56,15 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   CustomButton(
+                    icon: Icons.repeat,
+                    onTap: () {
+                      context.read<CardController>().triggerRewind();
+                    },
+                  ),
+                  SizedBox(
+                    width: 60,
+                  ),
+                  CustomButton(
                     icon: Icons.close,
                     onTap: () {
                       context.read<CardController>().triggerLeftOnCard();
@@ -68,12 +77,6 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                     icon: Icons.favorite_border,
                     onTap: () {
                       context.read<CardController>().triggerRightOnCard();
-                    },
-                  ),
-                  CustomButton(
-                    icon: Icons.favorite_border,
-                    onTap: () {
-                      context.read<CardController>().triggerRewind();
                     },
                   ),
                 ],
