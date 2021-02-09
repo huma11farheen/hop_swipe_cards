@@ -13,3 +13,5 @@
 ## [0.0.5+1] - fix argument name, because of the opposite mean
 
 ## [0.0.6] - Add feature for top and bottom swipe
+
+## [0.0.7] - Add feature for rewind
