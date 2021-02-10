@@ -218,7 +218,8 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
               swipedCards++;
               afterSwipeAlignment = frontCardAlign;
             }
-            if (_preventLeftSwipe &&
+            if (_preventLeftSwipe != null &&
+                _preventLeftSwipe &&
                 orientation == CardSwipeOrientation.recover) {
               widget._triedSwipeLeftDuringRestriction?.call();
             }
@@ -447,7 +448,9 @@ class CardAnimation {
         endY = 0.0;
         _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = true;
       }
-      if (preventLeftSwipe && currentAlignment.x < 0) {
+      if (preventLeftSwipe != null &&
+          preventLeftSwipe &&
+          currentAlignment.x < 0) {
         endX = 0.0;
         endY = 0.0;
       }
