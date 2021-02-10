@@ -36,6 +36,11 @@ InProgressSwipingDirection progressSwipe(double direction) {
   }
 }
 
+typedef OnWillMoveNextCallback = bool Function(
+  int index,
+  TriggerDirection direction,
+);
+
 ///A Hop like swipe card
 class HopSwipeCards extends StatefulWidget {
   //A builder for swipe cards
@@ -71,6 +76,8 @@ class HopSwipeCards extends StatefulWidget {
 
   final VoidCallback cantSwipeLikeWhenNoPointsCallback;
 
+  final OnWillMoveNextCallback onWillMoveNextCallback;
+
   @override
   _HopSwipeCardsState createState() => _HopSwipeCardsState();
 
@@ -90,6 +97,7 @@ class HopSwipeCards extends StatefulWidget {
     this.cardController,
     this.swipeCompleteCallback,
     this.cantSwipeLikeWhenNoPointsCallback,
+    this.onWillMoveNextCallback,
   })  : assert(currentStack > 1),
         assert(swipeEdge > 0),
         assert(maxWidth > minWidth && maxHeight > minHeight),
