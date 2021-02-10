@@ -15,3 +15,5 @@
 ## [0.0.6] - Add feature for top and bottom swipe
 
 ## [0.0.7] - Add feature for rewind
+
+## [0.0.8] - Add feature for restricting left swipe
