@@ -75,28 +75,31 @@ class HopSwipeCards extends StatefulWidget {
 
   final VoidCallback _triedSwipeLeftDuringRestriction;
 
+  final CurrentIndexInDisplay _currentIndexInDisplay;
+
   @override
   _HopSwipeCardsState createState() => _HopSwipeCardsState();
 
-  HopSwipeCards({
-    @required SwipeCardBuilder cardBuilder,
-    @required int totalNum,
-    int currentStack = 3,
-    Duration animationDuration = const Duration(milliseconds: 500),
-    double swipeEdge = 3.0,
-    double maxWidth,
-    double maxHeight,
-    double minWidth,
-    double minHeight,
-    Widget noMoreSwipeCardsLeft,
-    bool isPointsLeft,
-    bool allowSwipeUpAndDown = false,
-    this.cardController,
-    this.swipeCompleteCallback,
-    this.cantSwipeLikeWhenNoPointsCallback,
-    VoidCallback triedSwipeLeftDuringRestriction,
-    OnRestrictLeftSwipeCallBack onRestrictLeftSwipeCallBack,
-  })  : assert(currentStack > 1),
+  HopSwipeCards(
+      {@required SwipeCardBuilder cardBuilder,
+      @required int totalNum,
+      int currentStack = 3,
+      Duration animationDuration = const Duration(milliseconds: 500),
+      double swipeEdge = 3.0,
+      double maxWidth,
+      double maxHeight,
+      double minWidth,
+      double minHeight,
+      Widget noMoreSwipeCardsLeft,
+      bool isPointsLeft,
+      bool allowSwipeUpAndDown = false,
+      this.cardController,
+      this.swipeCompleteCallback,
+      this.cantSwipeLikeWhenNoPointsCallback,
+      VoidCallback triedSwipeLeftDuringRestriction,
+      OnRestrictLeftSwipeCallBack onRestrictLeftSwipeCallBack,
+      CurrentIndexInDisplay currentIndexInDisplay})
+      : assert(currentStack > 1),
         assert(swipeEdge > 0),
         assert(maxWidth > minWidth && maxHeight > minHeight),
         _cardBuilder = cardBuilder,
@@ -108,6 +111,7 @@ class HopSwipeCards extends StatefulWidget {
         _swipeEdge = swipeEdge,
         _allowSwipeUpAndDown = allowSwipeUpAndDown,
         _triedSwipeLeftDuringRestriction = triedSwipeLeftDuringRestriction,
+        _currentIndexInDisplay = currentIndexInDisplay,
         _onRestrictLeftSwipeCallBack = onRestrictLeftSwipeCallBack {
     final widthGap = maxWidth - minWidth;
     final heightGap = maxHeight - minHeight;
@@ -163,12 +167,13 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
 
   void _initializeCurrentFront() {
     _currentFront = widget._totalCards - widget._stackNumber;
+    _preventLeftSwipe = widget._onRestrictLeftSwipeCallBack?.call(0);
+    widget._currentIndexInDisplay?.call(0);
   }
 
   void _initState() {
     _initializeCurrentFront();
 
-    _preventLeftSwipe = widget._onRestrictLeftSwipeCallBack?.call(0);
     _animationController = AnimationController(
       vsync: this,
       duration: widget._animationDuration,
@@ -231,6 +236,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
                 if (index < widget._totalCards - 1) {
                   _preventLeftSwipe =
                       widget._onRestrictLeftSwipeCallBack?.call(index + 1);
+                  widget._currentIndexInDisplay?.call(index + 1);
                 }
                 changeCardOrder();
               }
@@ -402,6 +408,9 @@ typedef CardSwipeCompleteCallback = void Function(
   TriggerDirection direction,
 );
 typedef OnRestrictLeftSwipeCallBack = bool Function(
+  int index,
+);
+typedef CurrentIndexInDisplay = void Function(
   int index,
 );
 
