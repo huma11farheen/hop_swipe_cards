@@ -168,7 +168,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   void _initState() {
     _initializeCurrentFront();
 
-    _preventLeftSwipe = widget._onRestrictLeftSwipeCallBack.call(0);
+    _preventLeftSwipe = widget._onRestrictLeftSwipeCallBack?.call(0);
     _animationController = AnimationController(
       vsync: this,
       duration: widget._animationDuration,
@@ -229,7 +229,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
               if (orientation != CardSwipeOrientation.recover) {
                 if (index < widget._totalCards - 1) {
                   _preventLeftSwipe =
-                      widget._onRestrictLeftSwipeCallBack(index + 1);
+                      widget._onRestrictLeftSwipeCallBack?.call(index + 1);
                 }
                 changeCardOrder();
               }

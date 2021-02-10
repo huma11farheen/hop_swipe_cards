@@ -17,3 +17,5 @@
 ## [0.0.7] - Add feature for rewind
 
 ## [0.0.8] - Add feature for restricting left swipe
+
+## [0.0.8+1] - Add null checks
