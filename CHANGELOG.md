@@ -21,3 +21,5 @@
 ## [0.0.8+1] - Add null checks
 
 ## [0.0.8+2] - Fix bugs
+
+## [0.0.9] - Add currentIndex callback
