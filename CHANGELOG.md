@@ -25,3 +25,5 @@
 ## [0.0.9] - Add currentIndex callback
 
 ## [1.0.0] - Remove disposable provider and fix duration
+
+## [1.0.0+1] - Minor Fix
