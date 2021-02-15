@@ -267,6 +267,9 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
       SizedBox.expand(
         child: GestureDetector(
           onPanUpdate: (final details) {
+            if (_animationController.isAnimating) {
+              return;
+            }
             setState(() {
               frontCardAlign = Alignment(
                 frontCardAlign.x +
