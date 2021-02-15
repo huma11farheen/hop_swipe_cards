@@ -23,3 +23,5 @@
 ## [0.0.8+2] - Fix bugs
 
 ## [0.0.9] - Add currentIndex callback
+
+## [1.0.0] - Remove disposable provider and fix duration

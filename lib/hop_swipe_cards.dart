@@ -2,7 +2,6 @@ library hop_swipe_cards;
 
 import 'dart:math';
 
-import 'package:disposable_provider/disposable_provider.dart';
 import 'package:flutter/material.dart';
 
 enum TriggerDirection {
@@ -83,9 +82,9 @@ class HopSwipeCards extends StatefulWidget {
   HopSwipeCards(
       {@required SwipeCardBuilder cardBuilder,
       @required int totalNum,
-      int currentStack = 3,
-      Duration animationDuration = const Duration(milliseconds: 500),
-      double swipeEdge = 3.0,
+      int currentStack = 5,
+      Duration animationDuration = const Duration(milliseconds: 260),
+      double swipeEdge = 2.6,
       double maxWidth,
       double maxHeight,
       double minWidth,
@@ -167,6 +166,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
 
   void _initializeCurrentFront() {
     _currentFront = widget._totalCards - widget._stackNumber;
+
     _preventLeftSwipe = widget._onRestrictLeftSwipeCallBack?.call(0);
     widget._currentIndexInDisplay?.call(0);
   }
@@ -183,10 +183,11 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
       )
       ..addStatusListener(
         (AnimationStatus status) {
-          final index =
-              widget._totalCards - widget._stackNumber - _currentFront;
-          var direction = _HopSwipeCardsState._trigger;
           if (status == AnimationStatus.completed) {
+            final index =
+                widget._totalCards - widget._stackNumber - _currentFront;
+
+            var direction = _HopSwipeCardsState._trigger;
             if (!isPointsLeft &&
                 _HopSwipeCardsState.triedSwipingLikeWhenNoPoints) {
               widget.cantSwipeLikeWhenNoPointsCallback.call();
@@ -321,7 +322,6 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
               context,
               widget._totalCards - realIndex - 1,
               progressSwipe(frontCardAlign.x),
-              _getOpacity(frontCardAlign.x),
             ),
           ),
         ),
@@ -355,7 +355,6 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
           context,
           widget._totalCards - realIndex - 1,
           InProgressSwipingDirection.center,
-          _getOpacity(frontCardAlign.x),
         ),
       ),
     );
@@ -398,7 +397,6 @@ typedef SwipeCardBuilder = Widget Function(
   BuildContext context,
   int index,
   InProgressSwipingDirection direction,
-  double opacity,
 );
 
 /// swipe card to [CardSwipeOrientation.left] or [CardSwipeOrientation.right]
@@ -431,10 +429,10 @@ class CardAnimation {
     if (_HopSwipeCardsState._trigger == TriggerDirection.none) {
       endX = currentAlignment.x > 0
           ? (currentAlignment.x > swipeEdge
-              ? currentAlignment.x + 10.0
+              ? currentAlignment.x + 8.0
               : baseAlign.x)
           : (currentAlignment.x < -swipeEdge
-              ? currentAlignment.x - 10.0
+              ? currentAlignment.x - 8.0
               : baseAlign.x);
       endY = currentAlignment.x > 3.0 || currentAlignment.x < -swipeEdge
           ? currentAlignment.y
@@ -447,7 +445,7 @@ class CardAnimation {
               : baseAlign.y;
         } else if (currentAlignment.y > 0) {
           endY = currentAlignment.y > swipeEdge
-              ? currentAlignment.y + 10.0
+              ? currentAlignment.y + 8.0
               : baseAlign.y;
         }
       }
@@ -582,19 +580,9 @@ class CardAnimation {
   }
 }
 
-double _getOpacity(double frontCardAlignX) {
-  var opacity = frontCardAlignX.abs() + 0.4;
-
-  if (opacity > 1) {
-    opacity = 1;
-  }
-
-  return opacity ??= 0.0;
-}
-
 typedef TriggerListener = void Function(TriggerDirection trigger);
 
-class CardController extends Disposable {
+class CardController {
   TriggerListener _listener;
 
   void triggerLeftOnCard() {
@@ -630,7 +618,6 @@ class CardController extends Disposable {
     _listener?.call(TriggerDirection.rewind);
   }
 
-  @override
   void dispose() {
     _listener = null;
   }
