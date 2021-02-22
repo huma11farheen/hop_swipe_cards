@@ -1,4 +1,3 @@
-import 'package:disposable_provider/disposable_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hop_swipe_cards/hop_swipe_cards.dart';
@@ -22,7 +21,7 @@ class Example extends StatelessWidget {
 
 class ExampleHomePage extends StatefulWidget {
   static Widget create() {
-    return DisposableProvider(
+    return Provider(
       create: (context) => CardController(),
       child: ExampleHomePage(),
     );
@@ -93,7 +92,7 @@ class _ExampleHomePageState extends State<ExampleHomePage>
                 maxHeight: MediaQuery.of(context).size.width * 0.9,
                 minWidth: MediaQuery.of(context).size.width * 0.8,
                 minHeight: MediaQuery.of(context).size.width * 0.8,
-                cardBuilder: (context, index, a, b) =>
+                cardBuilder: (context, index, a) =>
                     _SingleCard(image: images[index]),
                 swipeCompleteCallback: (int index, direction) {
                   //direction gives the swipe direction after completion
