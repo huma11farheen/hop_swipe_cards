@@ -90,7 +90,7 @@ class HopSwipeCards extends StatefulWidget {
       required double minWidth,
       required double minHeight,
       required Widget noMoreSwipeCardsLeft,
-      bool? isPointsLeft,
+      bool isPointsLeft = false,
       bool allowSwipeUpAndDown = false,
       required this.cardController,
       required this.swipeCompleteCallback,
