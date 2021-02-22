@@ -140,7 +140,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
 
   int _swipedCards = 0;
 
-  bool? _preventLeftSwipe = false;
+  bool? _preventLeftSwipe;
 
   @override
   void dispose() {
@@ -419,8 +419,8 @@ class CardAnimation {
       Alignment? currentAlignment,
       Alignment? baseAlign,
       double? swipeEdge,
-      bool? pointLeft,
-      bool? allowSwipeUpAndDown,
+      bool pointLeft = false,
+      bool allowSwipeUpAndDown = false,
       int? swipedCards,
       bool? preventLeftSwipe,
       Alignment? afterSwipeAlignment}) {
@@ -438,7 +438,7 @@ class CardAnimation {
           ? currentAlignment.y
           : baseAlign!.y;
 
-      if (allowSwipeUpAndDown!) {
+      if (allowSwipeUpAndDown) {
         if (currentAlignment.y < 0) {
           endY = currentAlignment.y < -swipeEdge
               ? currentAlignment.y - 10.0
@@ -450,7 +450,7 @@ class CardAnimation {
         }
       }
 
-      if (!pointLeft! && currentXLocation! > 0) {
+      if (!pointLeft && currentXLocation! > 0) {
         endX = 0.0;
         endY = 0.0;
         _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = true;
@@ -483,7 +483,7 @@ class CardAnimation {
       endX = currentAlignment!.x + swipeEdge!;
       endY = currentAlignment.y + 0.5;
 
-      if (!pointLeft!) {
+      if (!pointLeft) {
         _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = true;
         return CardAnimation.alignmentAnimationWhenNoPoints(
           controller!,
