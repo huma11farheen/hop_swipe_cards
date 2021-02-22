@@ -130,7 +130,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   Alignment frontCardAlign = Alignment.center;
   Alignment afterSwipeAlignment = Alignment.center;
 
-  AnimationController? _animationController;
+  late final AnimationController _animationController;
 
   int _currentFront = 0;
 
@@ -144,7 +144,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
 
   @override
   void dispose() {
-    _animationController!.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -264,7 +264,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
       SizedBox.expand(
         child: GestureDetector(
           onPanUpdate: (final details) {
-            if (_animationController!.isAnimating) {
+            if (_animationController.isAnimating) {
               return;
             }
             setState(() {
@@ -294,7 +294,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
 
     if (index == widget._stackNumber - 1) {
       return Align(
-        alignment: _animationController!.status == AnimationStatus.forward
+        alignment: _animationController.status == AnimationStatus.forward
             ? frontCardAlign = CardAnimation.frontCardAlign(
                     swipedCards: _swipedCards,
                     currentXLocation: frontCardAlign.x,
@@ -310,9 +310,9 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
             : frontCardAlign,
         child: Transform.rotate(
           angle: (pi / 80.0) *
-              (_animationController!.status == AnimationStatus.forward
+              (_animationController.status == AnimationStatus.forward
                   ? CardAnimation.frontCardRotate(
-                      _animationController!,
+                      _animationController,
                       frontCardAlign.x,
                     ).value
                   : frontCardAlign.x),
@@ -328,25 +328,25 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
       );
     }
     return Align(
-      alignment: _animationController!.status == AnimationStatus.forward &&
+      alignment: _animationController.status == AnimationStatus.forward &&
               (frontCardAlign.x > 3.0 ||
                   frontCardAlign.x < -3.0 ||
                   frontCardAlign.y > 3 ||
                   frontCardAlign.y < -3)
           ? CardAnimation.backCardAlign(
-              _animationController!,
+              _animationController,
               widget._cardAligns[index],
               widget._cardAligns[index + 1],
             ).value
           : widget._cardAligns[index],
       child: SizedBox.fromSize(
-        size: _animationController!.status == AnimationStatus.forward &&
+        size: _animationController.status == AnimationStatus.forward &&
                 (frontCardAlign.x > 3.0 ||
                     frontCardAlign.x < -3.0 ||
                     frontCardAlign.y > 3 ||
                     frontCardAlign.y < -3)
             ? CardAnimation.backCardSize(
-                _animationController!,
+                _animationController,
                 widget._cardSizes[index],
                 widget._cardSizes[index + 1],
               ).value
@@ -361,7 +361,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   }
 
   void animateCards(TriggerDirection trigger) {
-    if (_animationController!.isAnimating ||
+    if (_animationController.isAnimating ||
         _currentFront + widget._stackNumber == 0 ||
         (trigger == TriggerDirection.rewind && _swipedCards == 0)) {
       return;
@@ -373,7 +373,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
         _currentFront++;
       });
     }
-    _animationController!
+    _animationController
       ..stop()
       ..value = 0.0
       ..forward();
