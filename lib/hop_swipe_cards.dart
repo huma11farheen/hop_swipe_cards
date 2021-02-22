@@ -413,40 +413,41 @@ typedef CurrentIndexInDisplay = void Function(
 );
 
 class CardAnimation {
-  static Animation<Alignment> frontCardAlign(
-      {double? currentXLocation,
-      AnimationController? controller,
-      Alignment? currentAlignment,
-      Alignment? baseAlign,
-      double? swipeEdge,
-      bool pointLeft = false,
-      bool allowSwipeUpAndDown = false,
-      int? swipedCards,
-      bool? preventLeftSwipe,
-      Alignment? afterSwipeAlignment}) {
+  static Animation<Alignment> frontCardAlign({
+    required double? currentXLocation,
+    required AnimationController controller,
+    required Alignment currentAlignment,
+    required Alignment baseAlign,
+    required double? swipeEdge,
+    required int swipedCards,
+    required Alignment afterSwipeAlignment,
+    bool pointLeft = false,
+    bool allowSwipeUpAndDown = false,
+    bool? preventLeftSwipe,
+  }) {
     double endX, endY;
 
     if (_HopSwipeCardsState._trigger == TriggerDirection.none) {
-      endX = currentAlignment!.x > 0
+      endX = currentAlignment.x > 0
           ? (currentAlignment.x > swipeEdge!
               ? currentAlignment.x + 8.0
-              : baseAlign!.x)
+              : baseAlign.x)
           : (currentAlignment.x < -swipeEdge!
               ? currentAlignment.x - 8.0
-              : baseAlign!.x);
+              : baseAlign.x);
       endY = currentAlignment.x > 3.0 || currentAlignment.x < -swipeEdge
           ? currentAlignment.y
-          : baseAlign!.y;
+          : baseAlign.y;
 
       if (allowSwipeUpAndDown) {
         if (currentAlignment.y < 0) {
           endY = currentAlignment.y < -swipeEdge
               ? currentAlignment.y - 10.0
-              : baseAlign!.y;
+              : baseAlign.y;
         } else if (currentAlignment.y > 0) {
           endY = currentAlignment.y > swipeEdge
               ? currentAlignment.y + 8.0
-              : baseAlign!.y;
+              : baseAlign.y;
         }
       }
 
@@ -464,35 +465,35 @@ class CardAnimation {
     } else if (_HopSwipeCardsState._trigger == TriggerDirection.top ||
         _HopSwipeCardsState._trigger == TriggerDirection.bottom) {
       if (_HopSwipeCardsState._trigger == TriggerDirection.top) {
-        endX = currentAlignment!.x;
+        endX = currentAlignment.x;
         endY = currentAlignment.y - swipeEdge!;
       } else {
-        endX = currentAlignment!.x;
+        endX = currentAlignment.x;
         endY = currentAlignment.y + swipeEdge!;
       }
     } else if (_HopSwipeCardsState._trigger == TriggerDirection.rewind &&
-        swipedCards! > 0) {
+        swipedCards > 0) {
       endY = 0;
       endX = 0;
       currentAlignment = afterSwipeAlignment;
     } else if (_HopSwipeCardsState._trigger == TriggerDirection.leftOnCard ||
         _HopSwipeCardsState._trigger == TriggerDirection.leftOnProfile) {
-      endX = currentAlignment!.x - swipeEdge!;
+      endX = currentAlignment.x - swipeEdge!;
       endY = currentAlignment.y + 0.5;
     } else {
-      endX = currentAlignment!.x + swipeEdge!;
+      endX = currentAlignment.x + swipeEdge!;
       endY = currentAlignment.y + 0.5;
 
       if (!pointLeft) {
         _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = true;
         return CardAnimation.alignmentAnimationWhenNoPoints(
-          controller!,
+          controller,
           currentAlignment,
           Alignment(endX, endY),
         );
       }
       return CardAnimation.alignAnimtion(
-        controller!,
+        controller,
         currentAlignment,
         Alignment(endX, endY),
       );
@@ -503,7 +504,7 @@ class CardAnimation {
       end: Alignment(endX, endY),
     ).animate(
       CurvedAnimation(
-        parent: controller!,
+        parent: controller,
         curve: Curves.linear,
       ),
     );
