@@ -312,8 +312,8 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
           angle: (pi / 80.0) *
               (_animationController.status == AnimationStatus.forward
                   ? CardAnimation.frontCardRotate(
-                      _animationController,
-                      frontCardAlign.x,
+                      controller: _animationController,
+                      beginRot: frontCardAlign.x,
                     ).value
                   : frontCardAlign.x),
           child: SizedBox.fromSize(
@@ -334,9 +334,9 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
                   frontCardAlign.y > 3 ||
                   frontCardAlign.y < -3)
           ? CardAnimation.backCardAlign(
-              _animationController,
-              widget._cardAligns[index],
-              widget._cardAligns[index + 1],
+              controller: _animationController,
+              beginAlign: widget._cardAligns[index],
+              endAlign: widget._cardAligns[index + 1],
             ).value
           : widget._cardAligns[index],
       child: SizedBox.fromSize(
@@ -346,9 +346,9 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
                     frontCardAlign.y > 3 ||
                     frontCardAlign.y < -3)
             ? CardAnimation.backCardSize(
-                _animationController,
-                widget._cardSizes[index],
-                widget._cardSizes[index + 1],
+                controller: _animationController,
+                beginSize: widget._cardSizes[index],
+                endSize: widget._cardSizes[index + 1],
               ).value
             : widget._cardSizes[index],
         child: widget._cardBuilder(
@@ -414,11 +414,11 @@ typedef CurrentIndexInDisplay = void Function(
 
 class CardAnimation {
   static Animation<Alignment> frontCardAlign({
-    required double? currentXLocation,
+    required double currentXLocation,
     required AnimationController controller,
     required Alignment currentAlignment,
     required Alignment baseAlign,
-    required double? swipeEdge,
+    required double swipeEdge,
     required int swipedCards,
     required Alignment afterSwipeAlignment,
     bool pointLeft = false,
@@ -429,10 +429,10 @@ class CardAnimation {
 
     if (_HopSwipeCardsState._trigger == TriggerDirection.none) {
       endX = currentAlignment.x > 0
-          ? (currentAlignment.x > swipeEdge!
+          ? (currentAlignment.x > swipeEdge
               ? currentAlignment.x + 8.0
               : baseAlign.x)
-          : (currentAlignment.x < -swipeEdge!
+          : (currentAlignment.x < -swipeEdge
               ? currentAlignment.x - 8.0
               : baseAlign.x);
       endY = currentAlignment.x > 3.0 || currentAlignment.x < -swipeEdge
@@ -451,7 +451,7 @@ class CardAnimation {
         }
       }
 
-      if (!pointLeft && currentXLocation! > 0) {
+      if (!pointLeft && currentXLocation > 0) {
         endX = 0.0;
         endY = 0.0;
         _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = true;
@@ -466,10 +466,10 @@ class CardAnimation {
         _HopSwipeCardsState._trigger == TriggerDirection.bottom) {
       if (_HopSwipeCardsState._trigger == TriggerDirection.top) {
         endX = currentAlignment.x;
-        endY = currentAlignment.y - swipeEdge!;
+        endY = currentAlignment.y - swipeEdge;
       } else {
         endX = currentAlignment.x;
-        endY = currentAlignment.y + swipeEdge!;
+        endY = currentAlignment.y + swipeEdge;
       }
     } else if (_HopSwipeCardsState._trigger == TriggerDirection.rewind &&
         swipedCards > 0) {
@@ -478,24 +478,24 @@ class CardAnimation {
       currentAlignment = afterSwipeAlignment;
     } else if (_HopSwipeCardsState._trigger == TriggerDirection.leftOnCard ||
         _HopSwipeCardsState._trigger == TriggerDirection.leftOnProfile) {
-      endX = currentAlignment.x - swipeEdge!;
+      endX = currentAlignment.x - swipeEdge;
       endY = currentAlignment.y + 0.5;
     } else {
-      endX = currentAlignment.x + swipeEdge!;
+      endX = currentAlignment.x + swipeEdge;
       endY = currentAlignment.y + 0.5;
 
       if (!pointLeft) {
         _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = true;
         return CardAnimation.alignmentAnimationWhenNoPoints(
-          controller,
-          currentAlignment,
-          Alignment(endX, endY),
+          controller: controller,
+          begin: currentAlignment,
+          end: Alignment(endX, endY),
         );
       }
       return CardAnimation.alignAnimtion(
-        controller,
-        currentAlignment,
-        Alignment(endX, endY),
+        controller: controller,
+        begin: currentAlignment,
+        end: Alignment(endX, endY),
       );
     }
 
@@ -510,21 +510,21 @@ class CardAnimation {
     );
   }
 
-  static Animation<Alignment> alignAnimtion(
-    AnimationController controller,
-    Alignment? begin,
-    Alignment end,
-  ) {
+  static Animation<Alignment> alignAnimtion({
+    required AnimationController controller,
+    required Alignment begin,
+    required Alignment end,
+  }) {
     return AlignmentTween(begin: begin, end: end).animate(
       CurvedAnimation(parent: controller, curve: Curves.easeOut),
     );
   }
 
-  static Animation<Alignment> alignmentAnimationWhenNoPoints(
-    AnimationController controller,
-    Alignment? end,
-    Alignment begin,
-  ) {
+  static Animation<Alignment> alignmentAnimationWhenNoPoints({
+    required AnimationController controller,
+    required Alignment end,
+    required Alignment begin,
+  }) {
     return TweenSequence(
       <TweenSequenceItem<Alignment>>[
         TweenSequenceItem<Alignment>(
@@ -544,8 +544,10 @@ class CardAnimation {
     );
   }
 
-  static Animation<double> frontCardRotate(
-      AnimationController controller, double beginRot) {
+  static Animation<double> frontCardRotate({
+    required AnimationController controller,
+    required double beginRot,
+  }) {
     return Tween(begin: beginRot, end: 0.0).animate(
       CurvedAnimation(
         parent: controller,
@@ -554,11 +556,11 @@ class CardAnimation {
     );
   }
 
-  static Animation<Size?> backCardSize(
-    AnimationController controller,
-    Size beginSize,
-    Size endSize,
-  ) {
+  static Animation<Size?> backCardSize({
+    required AnimationController controller,
+    required Size beginSize,
+    required Size endSize,
+  }) {
     return SizeTween(begin: beginSize, end: endSize).animate(
       CurvedAnimation(
         parent: controller,
@@ -567,11 +569,11 @@ class CardAnimation {
     );
   }
 
-  static Animation<Alignment> backCardAlign(
-    AnimationController controller,
-    Alignment beginAlign,
-    Alignment endAlign,
-  ) {
+  static Animation<Alignment> backCardAlign({
+    required AnimationController controller,
+    required Alignment beginAlign,
+    required Alignment endAlign,
+  }) {
     return AlignmentTween(begin: beginAlign, end: endAlign).animate(
       CurvedAnimation(
         parent: controller,
