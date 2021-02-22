@@ -188,7 +188,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
             var direction = _HopSwipeCardsState._trigger;
             if (!widget._isPointsLeft &&
                 _HopSwipeCardsState.triedSwipingLikeWhenNoPoints) {
-              widget.cantSwipeLikeWhenNoPointsCallback!.call();
+              widget.cantSwipeLikeWhenNoPointsCallback?.call();
               direction = TriggerDirection.none;
               _HopSwipeCardsState.triedSwipingLikeWhenNoPoints = false;
             }
