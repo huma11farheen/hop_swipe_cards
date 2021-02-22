@@ -66,7 +66,7 @@ class HopSwipeCards extends StatefulWidget {
   final List<Alignment> _cardAligns = [];
 
   //If you have points left, you can swipe the card
-  final bool? _canSwipe;
+  final bool _isPointsLeft;
 
   final VoidCallback? cantSwipeLikeWhenNoPointsCallback;
 
@@ -106,7 +106,7 @@ class HopSwipeCards extends StatefulWidget {
         _totalCards = totalNum,
         _stackNumber = currentStack,
         _animationDuration = animationDuration,
-        _canSwipe = isPointsLeft,
+        _isPointsLeft = isPointsLeft,
         _swipeEdge = swipeEdge,
         _allowSwipeUpAndDown = allowSwipeUpAndDown,
         _triedSwipeLeftDuringRestriction = triedSwipeLeftDuringRestriction,
@@ -137,8 +137,6 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
   static TriggerDirection? _trigger;
 
   static bool triedSwipingLikeWhenNoPoints = false;
-
-  bool get isPointsLeft => widget._canSwipe == null || widget._canSwipe!;
 
   int _swipedCards = 0;
 
@@ -188,7 +186,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
                 widget._totalCards - widget._stackNumber - _currentFront;
 
             var direction = _HopSwipeCardsState._trigger;
-            if (!isPointsLeft &&
+            if (!widget._isPointsLeft &&
                 _HopSwipeCardsState.triedSwipingLikeWhenNoPoints) {
               widget.cantSwipeLikeWhenNoPointsCallback!.call();
               direction = TriggerDirection.none;
@@ -305,7 +303,7 @@ class _HopSwipeCardsState extends State<HopSwipeCards>
                     currentAlignment: frontCardAlign,
                     baseAlign: widget._cardAligns[widget._stackNumber - 1],
                     swipeEdge: widget._swipeEdge,
-                    pointLeft: isPointsLeft,
+                    pointLeft: widget._isPointsLeft,
                     allowSwipeUpAndDown: widget._allowSwipeUpAndDown,
                     preventLeftSwipe: _preventLeftSwipe)
                 .value
