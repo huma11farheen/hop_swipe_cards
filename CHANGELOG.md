@@ -28,3 +28,5 @@
 ## [1.0.0+1] - Minor Fix
 
 ## [2.0.0-nullsafety.0] - Added null safety
+
+## [2.0.0-nullsafety.1] - Few fixes in null safety
