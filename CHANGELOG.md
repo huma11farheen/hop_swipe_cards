@@ -1,5 +1,4 @@
 ## [0.0.1] - Release.
-
 * A swipe card feature used in the dating app Hop written in dart
 
 ## [0.0.2] - Update widget during async events.
@@ -27,3 +26,5 @@
 ## [1.0.0] - Remove disposable provider and fix duration
 
 ## [1.0.0+1] - Minor Fix
+
+## [2.0.0-nullsafety.0] - Added null safety
